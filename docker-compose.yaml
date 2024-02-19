@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: api
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - api_db
+    links:
+      - api_db
+    volumes:
+      - ./services/api/:/go/src/app
+
+  api_db:
+    container_name: api_db
+    build:
+      context: ./services/db
+      dockerfile: Dockerfile
+    ports:
+      - 5437:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
